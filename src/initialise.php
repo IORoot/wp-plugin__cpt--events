@@ -16,9 +16,9 @@ class initialise
         $this->switch_on_metaboxes();
         $this->register_template_folder();
         $this->register_sidebar();
-        $this->isotope_filters();
         $this->enqueue_css();
         $this->register_transform_filters();
+        $this->register_shortcodes();
     }
 
     public function setup_cpt()
@@ -57,11 +57,6 @@ class initialise
         new register\sidebar(ucfirst($this->singular));
     }
 
-    public function isotope_filters()
-    {
-        new filters\isotope_filters;
-    }
-
     public function enqueue_css()
     {
         new filters\enqueue_css_in_footer($this->singular);
@@ -71,9 +66,12 @@ class initialise
     {
         new filters\transforms\parsedown;
         new filters\transforms\tailwind;
-        new filters\transforms\p_1;
-        new filters\transforms\tag_hide;
         new filters\transforms\youtube_links_to_embeds;
+    }
+
+    public function register_shortcodes()
+    {
+        new shortcodes\events_daily_three;
     }
 
 }

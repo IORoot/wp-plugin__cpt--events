@@ -1,0 +1,100 @@
+<?php
+
+namespace andyp\cpt\event\shortcodes;
+
+class events_daily_three
+{
+
+    public $attributes;
+    public $content;
+
+    public $new_content;
+
+    public $posts;
+
+    public $results;
+
+    public $html;
+
+    public function __construct()
+    {
+        add_shortcode( 'events_daily_three', [$this, 'run'] );
+    }
+
+    public function run($atts = array(), $content = null)
+    {
+        $this->html = '';
+        $this->attributes = $atts;
+        $this->content = $content;
+
+        $this->retrieve_posts();
+        $this->retrieve_meta();
+        $this->parse_content();
+
+        return $this->html;
+    }
+
+    private function retrieve_posts()
+    {
+        
+        $query_array['post_type']   = 'event';
+        $query_array['post_status'] = 'publish';
+        $query_array['posts_per_page'] = 3;
+
+        $query_array = array_merge($query_array, $this->attributes);
+
+        $this->posts = get_posts($query_array);
+
+    }
+
+    private function retrieve_meta()
+    {
+        foreach ($this->posts as $key => $post)
+        {
+            $this->results[$key]['post']  = (array) $post;
+            $this->results[$key]['meta']  = get_post_meta($post->ID);
+            $this->results[$key]['image']['image'] = get_the_post_thumbnail_url($post);
+        }
+    }
+
+
+    private function parse_content()
+    {
+        foreach ($this->results as $this->current_result)
+        {
+            $first_pass = $this->replace_moustaches($this->content);
+            // run through a second time because the post_content field may contain {{moustaches}}
+            // that won't be replaced the first time.
+            $this->html .= $this->replace_moustaches($first_pass);
+        }
+    }
+
+    private function replace_moustaches($content)
+    {
+        $this->new_content = $content;
+
+        preg_match_all('/{{(.*?)}}/', $this->new_content, $moustaches);
+
+        foreach ($moustaches[1] as $key => $field)
+        {
+            if (array_key_exists($field, $this->current_result['post']))
+            {
+                $this->new_content = str_replace($moustaches[0][$key], $this->current_result['post'][$field], $this->new_content);
+            }
+
+            if (array_key_exists($field, $this->current_result['meta']))
+            {
+                $this->new_content = str_replace($moustaches[0][$key], $this->current_result['meta'][$field][0], $this->new_content);
+            }
+            
+            if (array_key_exists($field, $this->current_result['image']))
+            {
+                $this->new_content = str_replace($moustaches[0][$key], $this->current_result['image'][$field], $this->new_content);
+            }
+        }
+
+        return $this->new_content;
+    }
+
+
+}
