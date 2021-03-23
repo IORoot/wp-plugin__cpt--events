@@ -19,6 +19,7 @@ class initialise
         $this->enqueue_css();
         $this->register_transform_filters();
         $this->register_shortcodes();
+        $this->register_admin_columns();
     }
 
     public function setup_cpt()
@@ -72,6 +73,12 @@ class initialise
     public function register_shortcodes()
     {
         new shortcodes\events_daily_three;
+    }
+
+    public function register_admin_columns()
+    {
+        new admin\admin_columns;
+        new admin\populate_startunix;
     }
 
 }

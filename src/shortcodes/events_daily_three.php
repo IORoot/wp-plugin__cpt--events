@@ -5,6 +5,7 @@ namespace andyp\cpt\event\shortcodes;
 class events_daily_three
 {
 
+    public $distinct_list;
     public $attributes;
     public $content;
 
@@ -34,6 +35,7 @@ class events_daily_three
         return $this->html;
     }
 
+
     private function retrieve_posts()
     {
         
@@ -44,11 +46,13 @@ class events_daily_three
         $query_array = array_merge($query_array, $this->attributes);
 
         $this->posts = get_posts($query_array);
-
     }
+
 
     private function retrieve_meta()
     {
+        $this->results = [];
+
         foreach ($this->posts as $key => $post)
         {
             $this->results[$key]['post']  = (array) $post;
@@ -77,24 +81,41 @@ class events_daily_three
 
         foreach ($moustaches[1] as $key => $field)
         {
+            $sanitize = $this->sanitize($field);
+            $field = str_replace(':sanitize','',$field);
+
             if (array_key_exists($field, $this->current_result['post']))
             {
-                $this->new_content = str_replace($moustaches[0][$key], $this->current_result['post'][$field], $this->new_content);
+                $value = $this->current_result['post'][$field];
+                if ($sanitize){ $value = \sanitize_title($value); }
+                $this->new_content = str_replace($moustaches[0][$key], $value, $this->new_content);
             }
 
             if (array_key_exists($field, $this->current_result['meta']))
             {
-                $this->new_content = str_replace($moustaches[0][$key], $this->current_result['meta'][$field][0], $this->new_content);
+                $value = $this->current_result['meta'][$field][0];
+                if ($sanitize){ $value = \sanitize_title($value); }
+                $this->new_content = str_replace($moustaches[0][$key], $value, $this->new_content);
             }
             
             if (array_key_exists($field, $this->current_result['image']))
             {
-                $this->new_content = str_replace($moustaches[0][$key], $this->current_result['image'][$field], $this->new_content);
+                $value = $this->current_result['image'][$field];
+                if ($sanitize){ $value = \sanitize_title($value); }
+                $this->new_content = str_replace($moustaches[0][$key], $value, $this->new_content);
             }
         }
-
+        $value = '';
         return $this->new_content;
     }
 
 
+    private function sanitize($field)
+    {
+        if (strpos($field, ':sanitize') !== false)
+        {
+            return true;
+        }
+        return false;
+    }
 }
