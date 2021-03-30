@@ -43,7 +43,9 @@ class events_daily_three
         $query_array['post_status'] = 'publish';
         $query_array['posts_per_page'] = 3;
 
-        $query_array = array_merge($query_array, $this->attributes);
+        if (is_array($this->attributes)){
+            $query_array = array_merge($query_array, $this->attributes);
+        }
 
         $this->posts = get_posts($query_array);
     }
