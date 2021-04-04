@@ -28,6 +28,8 @@ class events_daily_three
         $this->attributes = $atts;
         $this->content = $content;
 
+        $this->check_cat();
+        $this->check_tag();
         $this->retrieve_posts();
         $this->retrieve_meta();
         $this->parse_content();
@@ -35,6 +37,36 @@ class events_daily_three
         return $this->html;
     }
 
+
+    private function check_cat()
+    {
+        if (!array_key_exists('cat', $this->attributes)){ return; }
+
+        $this->attributes['tax_query'] = [
+            [
+                'taxonomy' => 'event_category',
+                'field'    => 'slug',
+                'terms'    => $this->attributes['cat'],
+            ],
+        ];
+
+        unset($this->attributes['cat']);
+    }
+
+    private function check_tag()
+    {
+        if (!array_key_exists('tag', $this->attributes)){ return; }
+
+        $this->attributes['tax_query'] = [
+            [
+                'taxonomy' => 'event_tag',
+                'field'    => 'slug',
+                'terms'    => $this->attributes['tag'],
+            ],
+        ];
+
+        unset($this->attributes['tag']);
+    }
 
     private function retrieve_posts()
     {
