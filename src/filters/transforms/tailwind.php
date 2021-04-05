@@ -52,7 +52,7 @@ class tailwind {
 
     public function h2()
     {
-        return 'text-6xl pt-24 border-t-4 border-goo mt-24 mb-12';
+        return 'text-6xl pt-24 border-t-4 border-Amber500 mt-24 mb-12';
     }
 
     public function h3()
@@ -77,12 +77,12 @@ class tailwind {
 
     public function ul()
     {
-        return 'text-xl list-outside list-disc bg-night mb-12 px-12 pt-12 pb-8 w-full';
+        return 'text-xl list-outside list-disc bg-Amber500 mb-12 px-12 pt-12 pb-8 w-full';
     }
 
     public function ol()
     {
-        return 'text-xl list-outside list-decimal bg-night mb-12 px-12 pt-12 pb-8 w-full';
+        return 'text-xl list-outside list-decimal bg-Amber500 mb-12 px-12 pt-12 pb-8 w-full';
     }
 
     public function li()
@@ -92,12 +92,12 @@ class tailwind {
 
     public function blockquote()
     {
-        return 'bg-night text-mist p-12 my-12 w-full';
+        return 'bg-Amber500 text-mist p-12 my-12 w-full';
     }
 
 
     public function a()
     {
-        return 'underline hover:bg-goo hover:text-black';
+        return 'underline hover:bg-Amber500 hover:text-black';
     }
 }
