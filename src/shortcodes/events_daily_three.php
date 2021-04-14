@@ -94,6 +94,10 @@ class events_daily_three
             $this->results[$key]['image']['image'] = get_the_post_thumbnail_url($post);
             $this->results[$key]['image']['path'] = dirname($this->results[$key]['image']['image']);
             $this->results[$key]['image']['file'] = basename($this->results[$key]['image']['image']);
+
+            $img = wp_get_attachment_image_src(get_post_thumbnail_id($post->ID), 'full');
+            $this->results[$key]['image']['width'] = $img[1];
+            $this->results[$key]['image']['height'] = $img[2];
         }
     }
 
