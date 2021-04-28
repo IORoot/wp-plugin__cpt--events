@@ -15,6 +15,7 @@ while ( have_posts() ) :
 	// -------------------------- TEMPLATE START ------------------------------
 	?>
 
+	<a name="top"></a>
 	<article class="bg-white text-night">
 		
 	<?php include( __DIR__ . '/template-parts/title_description.php');  ?>  
